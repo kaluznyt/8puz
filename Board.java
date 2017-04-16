@@ -5,6 +5,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Created by tkalu on 2017-04-16.
  */
+
 public class Board {
     private final int[][] tiles;
     private final int n;
@@ -20,18 +21,25 @@ public class Board {
         this.tiles = cloneArray(blocks);
         this.n = this.tiles.length;
 
-        initializeGoalBoard(this.n);
+        initializeTile(this.n);
     }
 
-    private int[][] initializeGoalBoard(int n) {
-       int[][] goal = new int[n][n];
-
+    private void initializeTile(int n) {
         for (int y = 0; y < n; y++) {
             for (int x = 0; x < n; x++) {
                 if (tiles[y][x] == 0) {
                     tile0y = y;
                     tile0x = x;
                 }
+            }
+        }
+    }
+
+    private int[][] getGoalBoard(int n) {
+        int[][] goal = new int[n][n];
+
+        for (int y = 0; y < n; y++) {
+            for (int x = 0; x < n; x++) {
                 goal[y][x] = y * n + x + 1;
             }
         }
@@ -41,13 +49,14 @@ public class Board {
         return goal;
     }
 
+
     public int dimension() {
         return n;
     }
 
     public int hamming() {
+        int[][] goal = getGoalBoard(dimension());
         int counter = 0;
-        int[][] goal = initializeGoalBoard(dimension());
 
         for (int i = 0; i < n; i++) {
             for (int x = 0; x < n; x++) {
@@ -61,7 +70,7 @@ public class Board {
     }
 
     private int manhattanValue(int tile, int posx, int posy) {
-        int[][] goal = initializeGoalBoard(dimension());
+        int[][] goal = getGoalBoard(dimension());
         int n = goal.length;
 
         for (int y = 0; y < n; y++) {
@@ -76,7 +85,7 @@ public class Board {
     }
 
     public int manhattan() {
-        int[][] goal = initializeGoalBoard(dimension());
+        int[][] goal = getGoalBoard(dimension());
         int counter = 0;
 
         for (int y = 0; y < n; y++) {
@@ -144,7 +153,7 @@ public class Board {
     public Iterable<Board> neighbors() {
         Queue<Board> q = new Queue<>();
 
-        // move left
+        // left
         if (tile0x - 1 >= 0) {
             int[][] newTiles = cloneTiles();
             swap(newTiles, tile0x - 1, tile0y);
@@ -152,7 +161,7 @@ public class Board {
             q.enqueue(b);
         }
 
-        // move right
+        // right
         if (tile0x + 1 < n) {
             int[][] newTiles = cloneTiles();
             swap(newTiles, tile0x + 1, tile0y);
@@ -160,7 +169,7 @@ public class Board {
             q.enqueue(b);
         }
 
-        // move up
+        // up
         if (tile0y - 1 >= 0) {
             int[][] newTiles = cloneTiles();
             swap(newTiles, tile0x, tile0y - 1);
@@ -168,7 +177,7 @@ public class Board {
             q.enqueue(b);
         }
 
-        // move down
+        // down
         if (tile0y + 1 < n) {
             int[][] newTiles = cloneTiles();
             swap(newTiles, tile0x, tile0y + 1);

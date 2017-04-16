@@ -8,7 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Board {
     private final int[][] tiles;
     private final int n;
-    private int[][] goal;
+    //private int[][] goal;
     private int tile0x;
     private int tile0y;
 
@@ -23,8 +23,8 @@ public class Board {
         initializeGoalBoard(this.n);
     }
 
-    private void initializeGoalBoard(int n) {
-        goal = new int[n][n];
+    private int[][] initializeGoalBoard(int n) {
+       int[][] goal = new int[n][n];
 
         for (int y = 0; y < n; y++) {
             for (int x = 0; x < n; x++) {
@@ -37,6 +37,8 @@ public class Board {
         }
 
         goal[n - 1][n - 1] = 0;
+
+        return goal;
     }
 
     public int dimension() {
@@ -45,6 +47,7 @@ public class Board {
 
     public int hamming() {
         int counter = 0;
+        int[][] goal = initializeGoalBoard(dimension());
 
         for (int i = 0; i < n; i++) {
             for (int x = 0; x < n; x++) {
@@ -58,6 +61,7 @@ public class Board {
     }
 
     private int manhattanValue(int tile, int posx, int posy) {
+        int[][] goal = initializeGoalBoard(dimension());
         int n = goal.length;
 
         for (int y = 0; y < n; y++) {
@@ -72,6 +76,7 @@ public class Board {
     }
 
     public int manhattan() {
+        int[][] goal = initializeGoalBoard(dimension());
         int counter = 0;
 
         for (int y = 0; y < n; y++) {

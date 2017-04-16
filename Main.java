@@ -20,7 +20,7 @@ public class Main {
     public static void main(String[] args) {
         args = new String[1];
         //args[0] = "C:\\Source\\coursera-algorithms\\8puzzle-testing\\8puzzle\\puzzle3x3-00.txt";
-        args[0] = "C:\\Source\\coursera-algorithms\\8puzzle-testing\\8puzzle\\puzzle04.txt";
+        args[0] = "C:\\Source\\coursera-algorithms\\8puzzle-testing\\8puzzle\\puzzle2x2-unsolvable1.txt";
         // write your code here
         // create initial board from file
         In in = new In(args[0]);
@@ -42,9 +42,9 @@ public class Main {
 
         Queue<Board> neighbors = (Queue<Board>) initial.neighbors();
 
-        for (Board b:neighbors) {
-            StdOut.print(b.toString());
-        }
+//        for (Board b:neighbors) {
+//            StdOut.print(b.toString());
+//        }
 
       //  StdOut.print(toString(Board.goal));
 

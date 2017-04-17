@@ -2,16 +2,12 @@ import edu.princeton.cs.algs4.Queue;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-/**
- * Created by tkalu on 2017-04-16.
- */
-
 public class Board {
     private final int[][] tiles;
-    private final int n;
-    //private int[][] goal;
     private int tile0x;
     private int tile0y;
+
+    private final int n;
 
     public Board(int[][] blocks) {
         if (blocks == null || blocks.length == 0) {
@@ -45,7 +41,6 @@ public class Board {
         }
 
         goal[n - 1][n - 1] = 0;
-
         return goal;
     }
 
@@ -69,8 +64,7 @@ public class Board {
         return counter;
     }
 
-    private int manhattanValue(int tile, int posx, int posy) {
-        int[][] goal = getGoalBoard(dimension());
+    private int manhattanValue(int tile, int posx, int posy, int[][] goal) {
         int n = goal.length;
 
         for (int y = 0; y < n; y++) {
@@ -91,7 +85,7 @@ public class Board {
         for (int y = 0; y < n; y++) {
             for (int x = 0; x < n; x++) {
                 if (tiles[y][x] != 0 && goal[y][x] != tiles[y][x]) {
-                    counter += manhattanValue(tiles[y][x], x, y);
+                    counter += manhattanValue(tiles[y][x], x, y, goal);
                 }
             }
         }
@@ -100,7 +94,7 @@ public class Board {
     }
 
     public boolean isGoal() {
-        return hamming() == 0;
+        return manhattan() == 0;
     }
 
     public Board twin() {

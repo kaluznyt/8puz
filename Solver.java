@@ -1,5 +1,6 @@
 import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.Stack;
+import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
 /**
@@ -12,48 +13,34 @@ public class Solver {
 
     public Solver(Board initial)           // find a solution to the initial board (using the A* algorithm)
     {
-        //Board twin = initial.twin();
-
-        int numberOfMoves = 1;
-
-        SearchNode sn = new SearchNode(initial, null, numberOfMoves);
-
-        //SearchNode snTwin = new SearchNode(twin, null, numberOfMoves);
+        Board twin = initial.twin();
 
         MinPQ<SearchNode> pq = new MinPQ<>();
-        //MinPQ<SearchNode> pqTwin = new MinPQ<>();
+        MinPQ<SearchNode> pqTwin = new MinPQ<>();
 
-        pq.insert(sn);
-        //pqTwin.insert(snTwin);
+        SearchNode minNode = new SearchNode(initial, null);
+        SearchNode minNodeTwin = new SearchNode(twin, null);
 
-        SearchNode minNode = pq.delMin();
-        //SearchNode minNodeTwin = null;
-
-        while (!minNode.board.isGoal())// &
-        //  (minNodeTwin = pqTwin.delMin()) != null && !minNodeTwin.board.isGoal()) {
-        {
-
-            pq = new MinPQ<>();
-            //pqTwin = new MinPQ<>();
-
-            for (Board neighbor : minNode.board.neighbors()) {
-                if (!neighbor.equals(minNode.prevBoard != null ? minNode.prevBoard.board : null)) {
-                    pq.insert(new SearchNode(neighbor, minNode, numberOfMoves));
-
+        while (!minNode.board.isGoal() &
+                !minNodeTwin.board.isGoal()) {
+            {
+                for (Board neighbor : minNode.board.neighbors()) {
+                    if (!neighbor.equals(minNode.prevBoard != null ? minNode.prevBoard.board : null)) {
+                        pq.insert(new SearchNode(neighbor, minNode));
+                    }
                 }
+                for (Board neighbor : minNodeTwin.board.neighbors()) {
+                    if (!neighbor.equals(minNodeTwin.prevBoard != null ? minNodeTwin.prevBoard.board : null)) {
+                        pqTwin.insert(new SearchNode(neighbor, minNodeTwin));
+                    }
+                }
+
+                minNode = pq.delMin();
+                minNode.numberOfMoves++;
+
+                minNodeTwin = pqTwin.delMin();
+                minNodeTwin.numberOfMoves++;
             }
-
-            minNode = pq.delMin();
-            minNode.print();
-            numberOfMoves++;
-
-
-//            for (Board neighbor : minNodeTwin.board.neighbors()) {
-//                if (!neighbor.equals(minNodeTwin.prevBoard != null ? minNodeTwin.prevBoard.board : null)) {
-//                    pqTwin.insert(new SearchNode(neighbor, minNodeTwin, numberOfMoves));
-//                } else {
-//                }
-//            }
         }
 
         finalsn = minNode.board.isGoal() ? minNode : null;
@@ -92,10 +79,11 @@ public class Solver {
         public Board board;
         int numberOfMoves = 0;
 
-        public SearchNode(Board board, SearchNode prevBoard, int numberOfMoves) {
+        public SearchNode(Board board, SearchNode prevBoard) {
             this.board = board;
             this.prevBoard = prevBoard;
-            this.numberOfMoves = numberOfMoves;
+
+            this.numberOfMoves += prevBoard != null ? prevBoard.numberOfMoves : 0;
         }
 
         private int priority() {
